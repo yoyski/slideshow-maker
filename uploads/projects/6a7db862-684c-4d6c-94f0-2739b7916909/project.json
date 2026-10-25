@@ -1,0 +1,18 @@
+{
+  "id": "6a7db862-684c-4d6c-94f0-2739b7916909",
+  "name": "My Slideshow",
+  "created_at": "2026-10-24T04:27:16.349454",
+  "updated_at": "2026-10-24T04:57:17.366590",
+  "slides": [
+    {
+      "id": "e44ed25c-6eb8-4a7a-8591-68f187d87782",
+      "image_path": "C:\\Users\\THINKPAD\\Documents\\slideshow-maker\\uploads\\projects\\6a7db862-684c-4d6c-94f0-2739b7916909\\slides\\e44ed25c-6eb8-4a7a-8591-68f187d87782.png",
+      "audio_path": null,
+      "duration": 3.0,
+      "noise_reduction": 0.55,
+      "apply_polish": true
+    }
+  ],
+  "user_name": "Yoyoy Samarro",
+  "user_email": "yoyoysamarro@gmail.com"
+}

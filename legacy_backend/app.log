@@ -1,0 +1,130 @@
+2026-10-24 12:05:00,036 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:05:00,037 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:05:00,041 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:05:00,041 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:06:39,104 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:06:39,104 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:06:39,106 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:06:39,107 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:12:33,228 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:12:33,228 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:12:40,686 - __main__ - ERROR - Missing packages: librosa, cv2, soundfile
+2026-10-24 12:12:40,687 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:19:04,269 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:19:04,269 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:19:04,272 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:19:04,272 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:19:33,331 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:19:33,332 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:19:33,334 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:19:33,334 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:20:17,212 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:20:17,212 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:20:17,214 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:20:17,215 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:21:03,172 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:21:03,172 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:21:09,005 - __main__ - INFO - All dependencies installed
+2026-10-24 12:21:09,006 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:21:09,073 - __main__ - INFO - FFmpeg found
+2026-10-24 12:21:09,079 - __main__ - INFO - Directories initialized
+2026-10-24 12:21:26,804 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:21:26,804 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:21:26,807 - __main__ - ERROR - Missing packages: flask, flask_cors, librosa, numpy, scipy, cv2, PIL, soundfile
+2026-10-24 12:21:26,807 - __main__ - ERROR - Please install with: pip install -r requirements.txt
+2026-10-24 12:22:33,829 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:22:33,829 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:22:34,294 - __main__ - INFO - All dependencies installed
+2026-10-24 12:22:34,294 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:22:34,357 - __main__ - INFO - FFmpeg found
+2026-10-24 12:22:34,360 - __main__ - INFO - Directories initialized
+2026-10-24 12:22:52,856 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:22:52,857 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:22:53,287 - __main__ - INFO - All dependencies installed
+2026-10-24 12:22:53,287 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:22:53,341 - __main__ - INFO - FFmpeg found
+2026-10-24 12:22:53,343 - __main__ - INFO - Directories initialized
+2026-10-24 12:24:21,404 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:24:21,404 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:24:21,850 - __main__ - INFO - All dependencies installed
+2026-10-24 12:24:21,850 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:24:21,916 - __main__ - INFO - FFmpeg found
+2026-10-24 12:24:21,918 - __main__ - INFO - Directories initialized
+2026-10-24 12:25:45,722 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:25:45,723 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:25:46,192 - __main__ - INFO - All dependencies installed
+2026-10-24 12:25:46,193 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:25:46,257 - __main__ - INFO - FFmpeg found
+2026-10-24 12:25:46,260 - __main__ - INFO - Directories initialized
+2026-10-24 12:25:46,260 - __main__ - INFO - Importing Flask app...
+2026-10-24 12:26:11,182 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:26:11,182 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:26:11,697 - __main__ - INFO - All dependencies installed
+2026-10-24 12:26:11,697 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:26:11,755 - __main__ - INFO - FFmpeg found
+2026-10-24 12:26:11,757 - __main__ - INFO - Directories initialized
+2026-10-24 12:26:11,758 - __main__ - INFO - Importing Flask app...
+2026-10-24 12:26:12,989 - __main__ - INFO - Flask app imported successfully
+2026-10-24 12:26:12,990 - __main__ - INFO - Starting Flask development server
+2026-10-24 12:26:13,020 - werkzeug - INFO - WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2026-10-24 12:26:13,020 - werkzeug - INFO - Press CTRL+C to quit
+2026-10-24 12:26:39,698 - __main__ - INFO - Starting Voice Slideshow Maker
+2026-10-24 12:26:39,698 - __main__ - INFO - Checking dependencies...
+2026-10-24 12:26:40,118 - __main__ - INFO - All dependencies installed
+2026-10-24 12:26:40,118 - __main__ - INFO - Checking FFmpeg...
+2026-10-24 12:26:40,183 - __main__ - INFO - FFmpeg found
+2026-10-24 12:26:40,185 - __main__ - INFO - Directories initialized
+2026-10-24 12:26:40,186 - __main__ - INFO - Importing Flask app...
+2026-10-24 12:26:41,322 - __main__ - INFO - Flask app imported successfully
+2026-10-24 12:26:41,323 - __main__ - INFO - Starting Flask development server
+2026-10-24 12:26:41,367 - werkzeug - INFO - WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2026-10-24 12:26:41,367 - werkzeug - INFO - Press CTRL+C to quit
+2026-10-24 12:26:46,700 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:46] "GET / HTTP/1.1" 200 -
+2026-10-24 12:26:46,793 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:46] "GET /api/auth/me HTTP/1.1" 401 -
+2026-10-24 12:26:46,904 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:46] "GET /favicon.ico HTTP/1.1" 404 -
+2026-10-24 12:26:54,801 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:54] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:55,692 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:55] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:56,088 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:56] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:56,264 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:56] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:56,440 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:56] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:56,657 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:56] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:26:57,144 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:26:57] "POST /api/auth/signin HTTP/1.1" 401 -
+2026-10-24 12:27:16,243 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:16] "POST /api/auth/signup HTTP/1.1" 201 -
+2026-10-24 12:27:16,266 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:16] "GET /api/projects HTTP/1.1" 200 -
+2026-10-24 12:27:16,352 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:16] "POST /api/projects HTTP/1.1" 201 -
+2026-10-24 12:27:23,059 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:23] "POST /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides HTTP/1.1" 201 -
+2026-10-24 12:27:23,070 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:23] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909 HTTP/1.1" 200 -
+2026-10-24 12:27:23,081 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:23] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/d3ec736a-d489-4927-a7dd-dbd37cbb607d/image HTTP/1.1" 200 -
+2026-10-24 12:27:34,578 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:34] "POST /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides HTTP/1.1" 201 -
+2026-10-24 12:27:34,588 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:34] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909 HTTP/1.1" 200 -
+2026-10-24 12:27:34,600 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:27:34] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/760245d1-592b-4ad0-afe1-ffc178783afd/image HTTP/1.1" 200 -
+2026-10-24 12:28:19,818 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:19] "GET / HTTP/1.1" 200 -
+2026-10-24 12:28:19,897 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:19] "GET /api/auth/me HTTP/1.1" 200 -
+2026-10-24 12:28:19,999 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:19] "GET /api/projects HTTP/1.1" 200 -
+2026-10-24 12:28:20,068 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:20] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/d3ec736a-d489-4927-a7dd-dbd37cbb607d/image HTTP/1.1" 304 -
+2026-10-24 12:28:20,069 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:20] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/760245d1-592b-4ad0-afe1-ffc178783afd/image HTTP/1.1" 304 -
+2026-10-24 12:28:38,007 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:38] "GET / HTTP/1.1" 200 -
+2026-10-24 12:28:38,081 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:38] "GET /api/auth/me HTTP/1.1" 200 -
+2026-10-24 12:28:38,105 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:38] "GET /api/projects HTTP/1.1" 200 -
+2026-10-24 12:28:38,124 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:38] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/d3ec736a-d489-4927-a7dd-dbd37cbb607d/image HTTP/1.1" 304 -
+2026-10-24 12:28:38,127 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:38] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/760245d1-592b-4ad0-afe1-ffc178783afd/image HTTP/1.1" 304 -
+2026-10-24 12:28:45,659 - app - INFO - Starting video generation for project 6a7db862-684c-4d6c-94f0-2739b7916909
+2026-10-24 12:28:48,312 - video_generator - INFO - Processing slide 1/2
+2026-10-24 12:28:49,036 - video_generator - INFO - Processing slide 2/2
+2026-10-24 12:28:49,827 - video_generator - INFO - Video created: c:\Users\THINKPAD\Documents\Slideshow Maker\uploads\projects\6a7db862-684c-4d6c-94f0-2739b7916909\output\My_Slideshow.mp4
+2026-10-24 12:28:49,920 - video_generator - ERROR - FFmpeg error: Command ['ffmpeg', '-i', 'c:\\Users\\THINKPAD\\Documents\\Slideshow Maker\\uploads\\projects\\6a7db862-684c-4d6c-94f0-2739b7916909\\output\\My_Slideshow.mp4', '-i', 'c:\\Users\\THINKPAD\\Documents\\Slideshow Maker\\uploads\\projects\\6a7db862-684c-4d6c-94f0-2739b7916909\\output\\My_Slideshow_audio.wav', '-c:v', 'copy', '-c:a', 'aac', '-y', 'c:\\Users\\THINKPAD\\Documents\\Slideshow Maker\\uploads\\projects\\6a7db862-684c-4d6c-94f0-2739b7916909\\output\\My_Slideshow.mp4'] returned non-zero exit status 4294967274.
+2026-10-24 12:28:49,922 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:28:49] "POST /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/render HTTP/1.1" 200 -
+2026-10-24 12:29:18,829 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:18] "DELETE /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/d3ec736a-d489-4927-a7dd-dbd37cbb607d HTTP/1.1" 200 -
+2026-10-24 12:29:18,846 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:18] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909 HTTP/1.1" 200 -
+2026-10-24 12:29:24,654 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:24] "DELETE /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/760245d1-592b-4ad0-afe1-ffc178783afd HTTP/1.1" 200 -
+2026-10-24 12:29:27,520 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:27] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909 HTTP/1.1" 200 -
+2026-10-24 12:29:30,398 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:30] "POST /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides HTTP/1.1" 201 -
+2026-10-24 12:29:30,411 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:30] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909 HTTP/1.1" 200 -
+2026-10-24 12:29:30,430 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:30] "GET /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/5cd64c94-cfca-41a3-a75f-da630357ff70/image HTTP/1.1" 200 -
+2026-10-24 12:29:40,122 - werkzeug - INFO - 127.0.0.1 - - [24/Oct/2026 12:29:40] "POST /api/projects/6a7db862-684c-4d6c-94f0-2739b7916909/slides/d3ec736a-d489-4927-a7dd-dbd37cbb607d/audio HTTP/1.1" 400 -
