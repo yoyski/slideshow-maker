@@ -1,4 +1,13 @@
-#!/usr/bin/env python3
+PS C:\Users\THINKPAD\Documents\slideshow-maker> git push -u origin main
+To https://github.com/yoyski/slideshow-maker.git
+ ! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/yoyski/slideshow-maker.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+PS C:\Users\THINKPAD\Documents\slideshow-maker> #!/usr/bin/env python3
 """View PostgreSQL database contents"""
 import psycopg2
 import psycopg2.extras

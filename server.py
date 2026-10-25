@@ -84,8 +84,36 @@ CREATE TABLE IF NOT EXISTS users (
     last_login_at TEXT,
     last_seen_at  TEXT
 );
+CREATE TABLE IF NOT EXISTS projects (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id       INTEGER NOT NULL,
+    name          TEXT NOT NULL,
+    description   TEXT,
+    folder_id     TEXT NOT NULL UNIQUE,
+    created_at    TEXT NOT NULL,
+    updated_at    TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS slideshows (
+    id            INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id    INTEGER NOT NULL,
+    user_id       INTEGER NOT NULL,
+    name          TEXT NOT NULL,
+    data          TEXT NOT NULL,
+    thumbnail     TEXT,
+    duration      REAL,
+    created_at    TEXT NOT NULL,
+    updated_at    TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 CREATE INDEX IF NOT EXISTS idx_users_created ON users(created_at);
 CREATE INDEX IF NOT EXISTS idx_users_seen ON users(last_seen_at);
+CREATE INDEX IF NOT EXISTS idx_projects_user ON projects(user_id);
+CREATE INDEX IF NOT EXISTS idx_projects_created ON projects(created_at);
+CREATE INDEX IF NOT EXISTS idx_slideshows_project ON slideshows(project_id);
+CREATE INDEX IF NOT EXISTS idx_slideshows_user ON slideshows(user_id);
+CREATE INDEX IF NOT EXISTS idx_slideshows_updated ON slideshows(updated_at);
 """
 
 SCHEMA_POSTGRES = """
@@ -98,8 +126,36 @@ CREATE TABLE IF NOT EXISTS users (
     last_login_at TEXT,
     last_seen_at  TEXT
 );
+CREATE TABLE IF NOT EXISTS projects (
+    id            SERIAL PRIMARY KEY,
+    user_id       INTEGER NOT NULL,
+    name          TEXT NOT NULL,
+    description   TEXT,
+    folder_id     TEXT NOT NULL UNIQUE,
+    created_at    TEXT NOT NULL,
+    updated_at    TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS slideshows (
+    id            SERIAL PRIMARY KEY,
+    project_id    INTEGER NOT NULL,
+    user_id       INTEGER NOT NULL,
+    name          TEXT NOT NULL,
+    data          TEXT NOT NULL,
+    thumbnail     TEXT,
+    duration      REAL,
+    created_at    TEXT NOT NULL,
+    updated_at    TEXT NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 CREATE INDEX IF NOT EXISTS idx_users_created ON users(created_at);
 CREATE INDEX IF NOT EXISTS idx_users_seen ON users(last_seen_at);
+CREATE INDEX IF NOT EXISTS idx_projects_user ON projects(user_id);
+CREATE INDEX IF NOT EXISTS idx_projects_created ON projects(created_at);
+CREATE INDEX IF NOT EXISTS idx_slideshows_project ON slideshows(project_id);
+CREATE INDEX IF NOT EXISTS idx_slideshows_user ON slideshows(user_id);
+CREATE INDEX IF NOT EXISTS idx_slideshows_updated ON slideshows(updated_at);
 """
 
 
@@ -208,9 +264,13 @@ def public(row):
 
 @app.before_request
 def guard():
-    if request.path.startswith("/api/") and request.method in ("POST", "PUT", "PATCH", "DELETE"):
+    if request.path.startswith("/api/") and request.method in ("POST", "PUT", "PATCH"):
         if not request.is_json:
             return reply(False, "Send the request as JSON.", 415)
+    if request.path.startswith("/api/") and request.method == "DELETE":
+        if request.data and not request.is_json:
+            return reply(False, "Send the request as JSON.", 415)
+    if request.path.startswith("/api/"):
         origin = request.headers.get("Origin")
         if origin and urlparse(origin).netloc != request.host:
             return reply(False, "Request blocked.", 403)
@@ -383,7 +443,432 @@ def delete_account():
     return reply(True, "Account deleted.")
 
 
-# ---------------------------------------------------------------- stats for the developer
+# ---------------------------------------------------------------- projects
+@app.post("/api/projects")
+def create_project():
+    """Create a new project/folder"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip()
+    description = str(data.get("description", "")).strip()
+    
+    if not 1 <= len(name) <= 100:
+        return reply(False, "Project name must be 1-100 characters.", 400)
+    if len(description) > 500:
+        return reply(False, "Description must be under 500 characters.", 400)
+    
+    folder_id = secrets.token_hex(12)
+    stamp = iso(now())
+    
+    try:
+        if USE_POSTGRES:
+            cur = db().cursor()
+            cur.execute(
+                "INSERT INTO projects (user_id, name, description, folder_id, created_at, updated_at) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                (row["id"], name, description, folder_id, stamp, stamp),
+            )
+            project_id = cur.fetchone()[0]
+            db().commit()
+        else:
+            cur = db().execute(
+                "INSERT INTO projects (user_id, name, description, folder_id, created_at, updated_at) VALUES (?,?,?,?,?,?)",
+                (row["id"], name, description, folder_id, stamp, stamp),
+            )
+            db().commit()
+            project_id = cur.lastrowid
+    except (sqlite3.IntegrityError, psycopg2.IntegrityError):
+        return reply(False, "Could not create project. Try again.", 409)
+    
+    return reply(True, "Project created.", 201, project={"id": project_id, "name": name, "description": description, "folder_id": folder_id, "created_at": stamp})
+
+
+@app.get("/api/projects")
+def list_projects():
+    """List all projects for the current user"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT p.id, p.name, p.description, p.folder_id, p.created_at, p.updated_at, 
+                   COUNT(s.id) as slideshow_count
+            FROM projects p
+            LEFT JOIN slideshows s ON p.id = s.project_id
+            WHERE p.user_id = %s
+            GROUP BY p.id
+            ORDER BY p.updated_at DESC
+        """, (row["id"],))
+        projects = cur.fetchall()
+        projects = [dict(p) for p in projects]
+    else:
+        cur = db().execute("""
+            SELECT p.id, p.name, p.description, p.folder_id, p.created_at, p.updated_at, 
+                   COUNT(s.id) as slideshow_count
+            FROM projects p
+            LEFT JOIN slideshows s ON p.id = s.project_id
+            WHERE p.user_id = ?
+            GROUP BY p.id
+            ORDER BY p.updated_at DESC
+        """, (row["id"],))
+        projects = [dict(p) for p in cur.fetchall()]
+    
+    return reply(True, "", projects=projects)
+
+
+@app.get("/api/projects/<int:project_id>")
+def get_project(project_id):
+    """Get a specific project with slideshow count"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("""
+            SELECT p.id, p.name, p.description, p.folder_id, p.created_at, p.updated_at,
+                   COUNT(s.id) as slideshow_count
+            FROM projects p
+            LEFT JOIN slideshows s ON p.id = s.project_id
+            WHERE p.id = %s AND p.user_id = %s
+            GROUP BY p.id
+        """, (project_id, row["id"]))
+        project = cur.fetchone()
+    else:
+        project = db().execute("""
+            SELECT p.id, p.name, p.description, p.folder_id, p.created_at, p.updated_at,
+                   COUNT(s.id) as slideshow_count
+            FROM projects p
+            LEFT JOIN slideshows s ON p.id = s.project_id
+            WHERE p.id = ? AND p.user_id = ?
+            GROUP BY p.id
+        """, (project_id, row["id"])).fetchone()
+    
+    if project is None:
+        return reply(False, "Project not found.", 404)
+    
+    return reply(True, "", project=dict(project) if USE_POSTGRES else dict(project))
+
+
+@app.patch("/api/projects/<int:project_id>")
+def update_project(project_id):
+    """Update project name or description"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip() if "name" in data else None
+    description = str(data.get("description", "")).strip() if "description" in data else None
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id, user_id FROM projects WHERE id = %s", (project_id,))
+        project = cur.fetchone()
+    else:
+        project = db().execute("SELECT id, user_id FROM projects WHERE id = ?", (project_id,)).fetchone()
+    
+    if project is None or project["user_id"] != row["id"]:
+        return reply(False, "Project not found or unauthorized.", 404)
+    
+    if name is not None and not 1 <= len(name) <= 100:
+        return reply(False, "Project name must be 1-100 characters.", 400)
+    if description is not None and len(description) > 500:
+        return reply(False, "Description must be under 500 characters.", 400)
+    
+    stamp = iso(now())
+    
+    if name is not None or description is not None:
+        if USE_POSTGRES:
+            updates = []
+            params = []
+            if name is not None:
+                updates.append("name = %s")
+                params.append(name)
+            if description is not None:
+                updates.append("description = %s")
+                params.append(description)
+            updates.append("updated_at = %s")
+            params.append(stamp)
+            params.append(project_id)
+            params.append(row["id"])
+            
+            cur = db().cursor()
+            cur.execute(f"UPDATE projects SET {', '.join(updates)} WHERE id = %s AND user_id = %s", params)
+            db().commit()
+        else:
+            updates = []
+            params = []
+            if name is not None:
+                updates.append("name = ?")
+                params.append(name)
+            if description is not None:
+                updates.append("description = ?")
+                params.append(description)
+            updates.append("updated_at = ?")
+            params.append(stamp)
+            params.append(project_id)
+            params.append(row["id"])
+            
+            db().execute(f"UPDATE projects SET {', '.join(updates)} WHERE id = ? AND user_id = ?", params)
+            db().commit()
+    
+    return reply(True, "Project updated.")
+
+
+@app.delete("/api/projects/<int:project_id>")
+def delete_project(project_id):
+    """Delete a project and all its slideshows"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id, user_id FROM projects WHERE id = %s", (project_id,))
+        project = cur.fetchone()
+    else:
+        project = db().execute("SELECT id, user_id FROM projects WHERE id = ?", (project_id,)).fetchone()
+    
+    if project is None or project["user_id"] != row["id"]:
+        return reply(False, "Project not found or unauthorized.", 404)
+    
+    # Delete all slideshows in this project first
+    if USE_POSTGRES:
+        cur = db().cursor()
+        cur.execute("DELETE FROM slideshows WHERE project_id = %s", (project_id,))
+        cur.execute("DELETE FROM projects WHERE id = %s AND user_id = %s", (project_id, row["id"]))
+        db().commit()
+    else:
+        db().execute("DELETE FROM slideshows WHERE project_id = ?", (project_id,))
+        db().execute("DELETE FROM projects WHERE id = ? AND user_id = ?", (project_id, row["id"]))
+        db().commit()
+    
+    return reply(True, "Project deleted.")
+
+
+# ---------------------------------------------------------------- slideshows
+@app.post("/api/slideshows")
+def create_slideshow():
+    """Create a new slideshow in a project"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip()
+    project_id = data.get("project_id")
+    slideshow_data = data.get("data", "{}")
+    
+    if not 1 <= len(name) <= 100:
+        return reply(False, "Slideshow name must be 1-100 characters.", 400)
+    if not project_id:
+        return reply(False, "Project ID is required.", 400)
+    
+    # Verify user owns the project
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id, user_id FROM projects WHERE id = %s", (project_id,))
+        project = cur.fetchone()
+    else:
+        project = db().execute("SELECT id, user_id FROM projects WHERE id = ?", (project_id,)).fetchone()
+    
+    if not project or project["user_id"] != row["id"]:
+        return reply(False, "Project not found or unauthorized.", 404)
+    
+    stamp = iso(now())
+    
+    try:
+        if USE_POSTGRES:
+            cur = db().cursor()
+            cur.execute(
+                "INSERT INTO slideshows (project_id, user_id, name, data, created_at, updated_at) VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
+                (project_id, row["id"], name, str(slideshow_data), stamp, stamp),
+            )
+            slideshow_id = cur.fetchone()[0]
+            db().commit()
+        else:
+            cur = db().execute(
+                "INSERT INTO slideshows (project_id, user_id, name, data, created_at, updated_at) VALUES (?,?,?,?,?,?)",
+                (project_id, row["id"], name, str(slideshow_data), stamp, stamp),
+            )
+            db().commit()
+            slideshow_id = cur.lastrowid
+    except (sqlite3.IntegrityError, psycopg2.IntegrityError):
+        return reply(False, "Could not create slideshow. Try again.", 409)
+    
+    return reply(True, "Slideshow created.", 201, slideshow={"id": slideshow_id, "name": name, "project_id": project_id, "created_at": stamp})
+
+
+@app.get("/api/slideshows")
+def list_slideshows():
+    """List all slideshows for current user, optionally filtered by project"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    project_id = request.args.get("project_id")
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        if project_id:
+            cur.execute(
+                "SELECT id, name, project_id, duration, created_at, updated_at FROM slideshows WHERE user_id = %s AND project_id = %s ORDER BY updated_at DESC",
+                (row["id"], project_id)
+            )
+        else:
+            cur.execute(
+                "SELECT id, name, project_id, duration, created_at, updated_at FROM slideshows WHERE user_id = %s ORDER BY updated_at DESC",
+                (row["id"],)
+            )
+        slideshows = cur.fetchall()
+        slideshows = [dict(s) for s in slideshows]
+    else:
+        if project_id:
+            cur = db().execute(
+                "SELECT id, name, project_id, duration, created_at, updated_at FROM slideshows WHERE user_id = ? AND project_id = ? ORDER BY updated_at DESC",
+                (row["id"], project_id)
+            )
+        else:
+            cur = db().execute(
+                "SELECT id, name, project_id, duration, created_at, updated_at FROM slideshows WHERE user_id = ? ORDER BY updated_at DESC",
+                (row["id"],)
+            )
+        slideshows = [dict(s) for s in cur.fetchall()]
+    
+    return reply(True, "", slideshows=slideshows)
+
+
+@app.get("/api/slideshows/<int:slideshow_id>")
+def get_slideshow(slideshow_id):
+    """Get a specific slideshow with its data"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(
+            "SELECT id, name, project_id, data, duration, created_at, updated_at FROM slideshows WHERE id = %s AND user_id = %s",
+            (slideshow_id, row["id"])
+        )
+        slideshow = cur.fetchone()
+    else:
+        slideshow = db().execute(
+            "SELECT id, name, project_id, data, duration, created_at, updated_at FROM slideshows WHERE id = ? AND user_id = ?",
+            (slideshow_id, row["id"])
+        ).fetchone()
+    
+    if slideshow is None:
+        return reply(False, "Slideshow not found.", 404)
+    
+    return reply(True, "", slideshow=dict(slideshow) if USE_POSTGRES else dict(slideshow))
+
+
+@app.patch("/api/slideshows/<int:slideshow_id>")
+def update_slideshow(slideshow_id):
+    """Update slideshow name, data, or duration"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    data = request.get_json(silent=True) or {}
+    name = str(data.get("name", "")).strip() if "name" in data else None
+    slideshow_data = data.get("data") if "data" in data else None
+    duration = data.get("duration") if "duration" in data else None
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id, user_id FROM slideshows WHERE id = %s", (slideshow_id,))
+        slideshow = cur.fetchone()
+    else:
+        slideshow = db().execute("SELECT id, user_id FROM slideshows WHERE id = ?", (slideshow_id,)).fetchone()
+    
+    if slideshow is None or slideshow["user_id"] != row["id"]:
+        return reply(False, "Slideshow not found or unauthorized.", 404)
+    
+    if name is not None and not 1 <= len(name) <= 100:
+        return reply(False, "Slideshow name must be 1-100 characters.", 400)
+    
+    stamp = iso(now())
+    
+    if name is not None or slideshow_data is not None or duration is not None:
+        if USE_POSTGRES:
+            updates = []
+            params = []
+            if name is not None:
+                updates.append("name = %s")
+                params.append(name)
+            if slideshow_data is not None:
+                updates.append("data = %s")
+                params.append(str(slideshow_data))
+            if duration is not None:
+                updates.append("duration = %s")
+                params.append(float(duration) if duration else None)
+            updates.append("updated_at = %s")
+            params.append(stamp)
+            params.append(slideshow_id)
+            params.append(row["id"])
+            
+            cur = db().cursor()
+            cur.execute(f"UPDATE slideshows SET {', '.join(updates)} WHERE id = %s AND user_id = %s", params)
+            db().commit()
+        else:
+            updates = []
+            params = []
+            if name is not None:
+                updates.append("name = ?")
+                params.append(name)
+            if slideshow_data is not None:
+                updates.append("data = ?")
+                params.append(str(slideshow_data))
+            if duration is not None:
+                updates.append("duration = ?")
+                params.append(float(duration) if duration else None)
+            updates.append("updated_at = ?")
+            params.append(stamp)
+            params.append(slideshow_id)
+            params.append(row["id"])
+            
+            db().execute(f"UPDATE slideshows SET {', '.join(updates)} WHERE id = ? AND user_id = ?", params)
+            db().commit()
+    
+    return reply(True, "Slideshow updated.")
+
+
+@app.delete("/api/slideshows/<int:slideshow_id>")
+def delete_slideshow(slideshow_id):
+    """Delete a slideshow"""
+    row = current_user()
+    if row is None:
+        return reply(False, "Not signed in.", 401)
+    
+    if USE_POSTGRES:
+        cur = db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute("SELECT id, user_id FROM slideshows WHERE id = %s", (slideshow_id,))
+        slideshow = cur.fetchone()
+    else:
+        slideshow = db().execute("SELECT id, user_id FROM slideshows WHERE id = ?", (slideshow_id,)).fetchone()
+    
+    if slideshow is None or slideshow["user_id"] != row["id"]:
+        return reply(False, "Slideshow not found or unauthorized.", 404)
+    
+    if USE_POSTGRES:
+        cur = db().cursor()
+        cur.execute("DELETE FROM slideshows WHERE id = %s AND user_id = %s", (slideshow_id, row["id"]))
+        db().commit()
+    else:
+        db().execute("DELETE FROM slideshows WHERE id = ? AND user_id = ?", (slideshow_id, row["id"]))
+        db().commit()
+    
+    return reply(True, "Slideshow deleted.")
+
+
+
 def compute_stats():
     n = now()
     day0 = iso(n.replace(hour=0, minute=0, second=0, microsecond=0))
