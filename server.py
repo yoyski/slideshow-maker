@@ -66,6 +66,11 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=timedelta(days=30),
     MAX_CONTENT_LENGTH=16 * 1024,      # account requests are tiny
 )
+
+# Serve static files from templates directory
+@app.route('/templates/<path:filename>')
+def serve_template_files(filename):
+    return send_from_directory(BASE / "templates", filename)
 if os.environ.get("TRUSTED_PROXIES"):  # set to 1 when behind nginx, Render, Fly, Railway, etc.
     from werkzeug.middleware.proxy_fix import ProxyFix
     n = int(os.environ["TRUSTED_PROXIES"])
